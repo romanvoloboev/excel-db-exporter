@@ -28,25 +28,26 @@
     <mvc:annotation-driven/>
     <mvc:resources mapping="/resources/**" location="/resources/"/>
 
-    <security:global-method-security pre-post-annotations="enabled"/>
+    <!--<security:global-method-security pre-post-annotations="enabled"/>-->
 
-    <security:http use-expressions="true" disable-url-rewriting="true" pattern="/**">
-    <security:form-login login-page="/login" login-processing-url="/login_processing"  authentication-failure-url="/login?failed=true" default-target-url="/"/>
-    <security:logout logout-url="/logout" logout-success-url="/login" invalidate-session="true" delete-cookies="JSESSIONID"/>
-    <security:remember-me services-ref="rememberMeService" key="key-exporter-user"/>
-    <security:csrf disabled="true"/>
-    </security:http>
+    <!--<security:http use-expressions="true" disable-url-rewriting="true" pattern="/**">-->
+    <!--<security:form-login login-page="/login" login-processing-url="/login_processing"  authentication-failure-url="/login?failed=true" default-target-url="/"/>-->
+    <!--<security:logout logout-url="/logout" logout-success-url="/login" invalidate-session="true" delete-cookies="JSESSIONID"/>-->
+    <!--<security:remember-me services-ref="rememberMeService" key="key-exporter-user"/>-->
+    <!--<security:csrf disabled="true"/>-->
+    <!--</security:http>-->
 
-    <security:authentication-manager alias="authenticationManager">
-    <security:authentication-provider user-service-ref="customUserDetailsService"/>
-    </security:authentication-manager>
+    <!--<security:authentication-manager alias="authenticationManager">-->
+    <!--<security:authentication-provider user-service-ref="customUserDetailsService"/>-->
+    <!--</security:authentication-manager>-->
 
-    <bean id="rememberMeService" class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
-    <constructor-arg name="userDetailsService" ref="customUserDetailsService"/>
-    <constructor-arg name="key" value="key-exporter-user"/>
-    <property name="cookieName" value="excel-exporter"/>
-    <property name="tokenValiditySeconds" value="2678400"/>
-    </bean>
+    <!--<bean id="rememberMeService"-->
+          <!--class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">-->
+        <!--<constructor-arg name="userDetailsService" ref="customUserDetailsService"/>-->
+        <!--<constructor-arg name="key" value="key-exporter-user"/>-->
+        <!--<property name="cookieName" value="excel-exporter"/>-->
+        <!--<property name="tokenValiditySeconds" value="2678400"/>-->
+    <!--</bean>-->
 
     <bean id="configurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="classpath:project.properties"/>
