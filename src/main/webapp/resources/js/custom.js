@@ -1,10 +1,10 @@
-$(function(){
+$(function () {
     $('#menubar').resize(resizeMenubar);
 
     Dropzone.autoDiscover = false;
     myDropzone = new Dropzone("#filePreview", {
         acceptedFiles: "application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        url: "/test",
+        url: "/upload?file=",
         maxFiles: 1,
         parallelUploads: 2,
         maxFilesize: 10,
@@ -19,23 +19,30 @@ $(function(){
         dictDefaultMessage: "Выберите файлы для загрузки",
         dictCancelUpload: "Отменить загрузку",
 
-        error: function(file, response) {
-            $.notify("<b>test</b>",
+        error: function (file, response) {
+            $.notify("<b>"+response+"</b>",
                 {
                     type: "danger",
                     delay: 1000,
-                    onClose: function(){
+                    onClose: function () {
                         myDropzone.removeAllFiles();
                     }
                 });
         },
-        queuecomplete: function() {
-            saveProduct();
+        queuecomplete: function () {
+            //saveProduct();
         },
 
-        success: function(file, response) {
+        success: function (file, response) {
             if (response.status == "ok") {
-                images.push(response.image);
+                $.notify("<b>Файл успешно загружен</b>",
+                    {
+                        type: "success",
+                        delay: 1000,
+                        onClose: function () {
+                            myDropzone.removeAllFiles();
+                        }
+                    });
             }
         }
     });
