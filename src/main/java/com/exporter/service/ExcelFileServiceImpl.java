@@ -1,9 +1,11 @@
 package com.exporter.service;
 
+import com.exporter.dto.ExcelFileDTO;
 import com.exporter.model.ExcelFile;
 import com.exporter.repository.ExcelFileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -40,6 +42,14 @@ public class ExcelFileServiceImpl implements ExcelFileService {
         Map<String, String> map = new HashMap<>();
         map.put("status", "ok");
         return map;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ExcelFileDTO getFileDTO(Integer id) {
+        ExcelFile file = excelFileRepository.getOne(id);
+        return new ExcelFileDTO(file.getId(), file.getFileName(), file.getFileSize(),
+                formatDateToString(file.getUploadDate()), file.getCustomer().getLogin());
     }
 
     private void saveFileToDb(ExcelFile file) {

@@ -1,9 +1,13 @@
 package com.exporter.controller;
 
+import com.exporter.dto.DefaultExcelRowDTO;
+import com.exporter.dto.ExcelFileDTO;
 import com.exporter.model.ExcelFile;
 import com.exporter.service.CustomerServiceImpl;
+import com.exporter.service.DefaultExcelFileReader;
 import com.exporter.service.ExcelFileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,13 +19,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 @Controller
 public class MainController {
+    private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
 
     @Autowired
     private ExcelFileServiceImpl fileService;
@@ -29,11 +37,16 @@ public class MainController {
     @Autowired
     private CustomerServiceImpl customerService;
 
+    @Autowired
+    private DefaultExcelFileReader excelFileReader;
+
 
     @PreAuthorize("isAuthenticated()")
     @RequestMapping("/")
     public ModelAndView showMainPage() {
-        return new ModelAndView("index");
+        ModelAndView modelAndView = new ModelAndView("index");
+        modelAndView.addObject("fileList", get_user_files());
+        return modelAndView;
     }
 
     @PreAuthorize("isAnonymous()")
@@ -67,8 +80,21 @@ public class MainController {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @RequestMapping(value = "/get_user_files_list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<ExcelFile> get_user_files() {
+    public List<ExcelFileDTO> get_user_files() {
         return customerService.getCurrentCustomerFilesList();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @RequestMapping(value = "/content", method = RequestMethod.GET)
+    public ModelAndView showFileContent(@RequestParam("id") Integer id) {
+        ModelAndView modelAndView = new ModelAndView("content");
+        try {
+            modelAndView.addObject("rowsList", excelFileReader.readContentFromFile(id));
+            modelAndView.addObject("file", fileService.getFileDTO(id));
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
+        }
+        return modelAndView;
     }
 
 }

@@ -1174,7 +1174,7 @@ a.text-success:hover {
 }
 #base {
   overflow: hidden;
-  padding-left: 64px;
+  /*padding-left: 64px;*/
   width: 100%;
   min-height: 100%;
 }
@@ -1200,7 +1200,7 @@ a.text-success:hover {
 }
 @media (min-width: 1200px) {
   .menubar-pin #base {
-    padding-left: 150px;
+    /*padding-left: 150px;*/
   }
 }
 @media (min-width: 769px) {
