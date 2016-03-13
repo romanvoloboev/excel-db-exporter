@@ -15,10 +15,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * @author Roman Voloboev
- */
-
 @Service
 public class AuthorizationService implements UserDetailsService {
     private static final Logger LOGGER = Logger.getLogger(AuthorizationService.class.getName());

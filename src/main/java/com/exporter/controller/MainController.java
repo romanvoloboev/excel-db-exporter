@@ -1,8 +1,6 @@
 package com.exporter.controller;
 
 import com.exporter.dto.ExcelFileDTO;
-import com.exporter.service.impl.CustomerServiceImpl;
-import com.exporter.service.impl.DefaultExcelFileReader;
 import com.exporter.service.impl.FileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,7 +17,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -29,13 +26,6 @@ public class MainController {
 
     @Autowired
     private FileServiceImpl fileService;
-
-    @Autowired
-    private CustomerServiceImpl customerService;
-
-    @Autowired
-    private DefaultExcelFileReader excelFileReader;
-
 
     @PreAuthorize("isAuthenticated()")
     @RequestMapping("/")
@@ -75,21 +65,16 @@ public class MainController {
 
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
-    @RequestMapping(value = "/get_user_files_list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/get_files_list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<ExcelFileDTO> get_user_files() {
-        return customerService.getFilesList();
+        return fileService.getFilesList();
     }
 
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/content", method = RequestMethod.GET)
-    public ModelAndView showFileContent(@RequestParam("id") Integer id) {
+    public ModelAndView showFileContent() {
         ModelAndView modelAndView = new ModelAndView("content");
-        try {
-            modelAndView.addObject("rowsList", excelFileReader.readContentFromFile(id));
-            modelAndView.addObject("file", fileService.getFileDTO(id));
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
-        }
+        modelAndView.addObject("rowsList", fileService.getRowItems());
         return modelAndView;
     }
 

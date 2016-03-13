@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "content")
-public class Content {
+@Table(name = "rows")
+public class RowItem {
     private Integer id;
     private String god;
     private String KA;
@@ -21,10 +21,10 @@ public class Content {
     private String provaider;
     private String kosmodrom;
 
-    public Content() {
+    public RowItem() {
     }
 
-    public Content(String god, String KA, String RN, String operatorKA, String platformaKA, String naznachenieKA,
+    public RowItem(String god, String KA, String RN, String operatorKA, String platformaKA, String naznachenieKA,
                    String srok, String massa, String izgotovitel, String orbita, String sektor, String provaider,
                    String kosmodrom) {
         this.god = god;
@@ -161,24 +161,44 @@ public class Content {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Content content = (Content) o;
-        return Objects.equals(god, content.god) &&
-                Objects.equals(KA, content.KA) &&
-                Objects.equals(RN, content.RN) &&
-                Objects.equals(operatorKA, content.operatorKA) &&
-                Objects.equals(platformaKA, content.platformaKA) &&
-                Objects.equals(naznachenieKA, content.naznachenieKA) &&
-                Objects.equals(srok, content.srok) &&
-                Objects.equals(massa, content.massa) &&
-                Objects.equals(izgotovitel, content.izgotovitel) &&
-                Objects.equals(orbita, content.orbita) &&
-                Objects.equals(sektor, content.sektor) &&
-                Objects.equals(provaider, content.provaider) &&
-                Objects.equals(kosmodrom, content.kosmodrom);
+        RowItem rowItem = (RowItem) o;
+        return Objects.equals(god, rowItem.god) &&
+                Objects.equals(KA, rowItem.KA) &&
+                Objects.equals(RN, rowItem.RN) &&
+                Objects.equals(operatorKA, rowItem.operatorKA) &&
+                Objects.equals(platformaKA, rowItem.platformaKA) &&
+                Objects.equals(naznachenieKA, rowItem.naznachenieKA) &&
+                Objects.equals(srok, rowItem.srok) &&
+                Objects.equals(massa, rowItem.massa) &&
+                Objects.equals(izgotovitel, rowItem.izgotovitel) &&
+                Objects.equals(orbita, rowItem.orbita) &&
+                Objects.equals(sektor, rowItem.sektor) &&
+                Objects.equals(provaider, rowItem.provaider) &&
+                Objects.equals(kosmodrom, rowItem.kosmodrom);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(god, KA, RN, operatorKA, platformaKA, naznachenieKA, srok, massa, izgotovitel, orbita, sektor, provaider, kosmodrom);
+    }
+
+    @Override
+    public String toString() {
+        return "RowItem{" +
+                "id=" + id +
+                ", god='" + god + '\'' +
+                ", KA='" + KA + '\'' +
+                ", RN='" + RN + '\'' +
+                ", operatorKA='" + operatorKA + '\'' +
+                ", platformaKA='" + platformaKA + '\'' +
+                ", naznachenieKA='" + naznachenieKA + '\'' +
+                ", srok='" + srok + '\'' +
+                ", massa='" + massa + '\'' +
+                ", izgotovitel='" + izgotovitel + '\'' +
+                ", orbita='" + orbita + '\'' +
+                ", sektor='" + sektor + '\'' +
+                ", provaider='" + provaider + '\'' +
+                ", kosmodrom='" + kosmodrom + '\'' +
+                '}';
     }
 }

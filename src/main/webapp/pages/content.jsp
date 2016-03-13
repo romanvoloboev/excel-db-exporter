@@ -9,14 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%@include file="includes/css.jsp" %>
     <title>Excel DB Exporter</title>
-    <style type="text/css">
-        .dropzone {
-            border: dashed 2px rgba(72, 72, 67, 0.50);
-            border-radius: 5px;
-            padding: 0;
-            min-height: 80px;
-        }
-    </style>
 </head>
 
 <body class="menubar-hoverable header-fixed menubar-pin ">
@@ -26,9 +18,6 @@
     <div id="content">
         <section>
             <div class="row">
-                <div class="col-lg-12 text-center" style="margin-top: 10px;">
-                    <h4>Содержимое файла ${file.fileName}</h4>
-                </div>
                 <div id="table" class="col-lg-12">
                     <div class="card">
                         <div class="card-body no-padding">
@@ -36,27 +25,35 @@
                                 <table class="table table-striped no-margin">
                                     <thead>
                                     <tr>
-                                        <th class="text-left"><c:out value="${rowsList[0].name}"/></th>
-                                        <th class="text-left"><c:out value="${rowsList[0].phone}"/></th>
-                                        <th class="text-left"><c:out value="${rowsList[0].email}"/></th>
-                                        <th class="text-left"><c:out value="${rowsList[0].date}"/></th>
-                                        <th class="text-left"><c:out value="${rowsList[0].company}"/></th>
-                                        <th class="text-left"><c:out value="${rowsList[0].country}"/></th>
-                                        <th class="text-left"><c:out value="${rowsList[0].city}"/></th>
-                                        <th class="text-left"><c:out value="${rowsList[0].guid}"/></th>
+                                        <th class="text-left">Год</th>
+                                        <th class="text-left">КА</th>
+                                        <th class="text-left">РН</th>
+                                        <th class="text-left">Оператор КА</th>
+                                        <th class="text-left">Платформа КА</th>
+                                        <th class="text-left">Назначение КА</th>
+                                        <th class="text-left">Срок</th>
+                                        <th class="text-left">Масса</th>
+                                        <th class="text-left">Изготовитель</th>
+                                        <th class="text-left">Орбита</th>
+                                        <th class="text-left">Провайдер</th>
+                                        <th class="text-left">Космодром</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach items="${rowsList}" var="row" begin="1">
+                                    <c:forEach items="${rowsList}" var="row">
                                         <tr>
-                                            <td class="text-left">${row.name}</td>
-                                            <td class="text-left">${row.phone}</td>
-                                            <td class="text-left">${row.email}</td>
-                                            <td class="text-left">${row.date}</td>
-                                            <td class="text-left">${row.company}</td>
-                                            <td class="text-left">${row.country}</td>
-                                            <td class="text-left">${row.city}</td>
-                                            <td class="text-left">${row.guid}</td>
+                                            <td class="text-left">${row.god}</td>
+                                            <td class="text-left">${row.KA}</td>
+                                            <td class="text-left">${row.RN}</td>
+                                            <td class="text-left">${row.operatorKA}</td>
+                                            <td class="text-left">${row.platformaKA}</td>
+                                            <td class="text-left">${row.naznachenieKA}</td>
+                                            <td class="text-left">${row.srok}</td>
+                                            <td class="text-left">${row.massa}</td>
+                                            <td class="text-left">${row.izgotovitel}</td>
+                                            <td class="text-left">${row.orbita}</td>
+                                            <td class="text-left">${row.provaider}</td>
+                                            <td class="text-left">${row.kosmodrom}</td>
                                         </tr>
                                     </c:forEach>
                                     </tbody>

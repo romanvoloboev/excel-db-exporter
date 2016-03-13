@@ -1,24 +1,25 @@
 package com.exporter.dto;
 
-/**
- * @author Roman Voloboev
- */
-
 public class ExcelFileDTO {
     private Integer id;
     private String fileName;
     private Double fileSize;
     private String uploadDate;
+    private Integer addedRecordsCount;
+    private Integer ignoredRecordsCount;
     private String customer;
 
     public ExcelFileDTO() {
     }
 
-    public ExcelFileDTO(Integer id, String fileName, Double fileSize, String uploadDate, String customer) {
+    public ExcelFileDTO(Integer id, String fileName, Double fileSize, String uploadDate, Integer addedRecordsCount,
+                        Integer ignoredRecordsCount, String customer) {
         this.id = id;
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.uploadDate = uploadDate;
+        this.addedRecordsCount = addedRecordsCount;
+        this.ignoredRecordsCount = ignoredRecordsCount;
         this.customer = customer;
     }
 
@@ -60,6 +61,22 @@ public class ExcelFileDTO {
 
     public void setCustomer(String customer) {
         this.customer = customer;
+    }
+
+    public Integer getAddedRecordsCount() {
+        return addedRecordsCount;
+    }
+
+    public void setAddedRecordsCount(Integer addedRecordsCount) {
+        this.addedRecordsCount = addedRecordsCount;
+    }
+
+    public Integer getIgnoredRecordsCount() {
+        return ignoredRecordsCount;
+    }
+
+    public void setIgnoredRecordsCount(Integer ignoredRecordsCount) {
+        this.ignoredRecordsCount = ignoredRecordsCount;
     }
 
     @Override

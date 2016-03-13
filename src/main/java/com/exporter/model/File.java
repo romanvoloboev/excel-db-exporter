@@ -10,8 +10,8 @@ public class File {
     private String fileName;
     private Double fileSize;
     private Date uploadDate;
-    private Integer totalRecords;
-    private Integer modifiedRecords;
+    private Integer addedRecordsCount;
+    private Integer ignoredRecordsCount;
     private Customer customer;
 
     public File() {
@@ -67,20 +67,20 @@ public class File {
         this.uploadDate = uploadDate;
     }
 
-    @Column(name = "total_records")
-    public Integer getTotalRecords() {
-        return totalRecords;
+    @Column(name = "added_records")
+    public Integer getAddedRecordsCount() {
+        return addedRecordsCount;
     }
-    public void setTotalRecords(Integer totalRecords) {
-        this.totalRecords = totalRecords;
+    public void setAddedRecordsCount(Integer addedRecordsCount) {
+        this.addedRecordsCount = addedRecordsCount;
     }
 
-    @Column(name = "modified_records")
-    public Integer getModifiedRecords() {
-        return modifiedRecords;
+    @Column(name = "ignored_records")
+    public Integer getIgnoredRecordsCount() {
+        return ignoredRecordsCount;
     }
-    public void setModifiedRecords(Integer modifiedRecords) {
-        this.modifiedRecords = modifiedRecords;
+    public void setIgnoredRecordsCount(Integer ignoredRecordsCount) {
+        this.ignoredRecordsCount = ignoredRecordsCount;
     }
 
     @ManyToOne

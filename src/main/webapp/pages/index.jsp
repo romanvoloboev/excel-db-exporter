@@ -44,7 +44,8 @@
                                         <th class="text-center">Размер</th>
                                         <th class="text-center">Дата загрузки</th>
                                         <th class="text-center">Автор</th>
-                                        <th class="text-center">Действие</th>
+                                        <th class="text-center">Новых записей</th>
+                                        <th class="text-center">Проигнорировано существующих</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -56,23 +57,14 @@
                                                     <td class="text-center">${f.fileSize} МБ.</td>
                                                     <td class="text-center">${f.uploadDate}</td>
                                                     <td class="text-center">${f.customer}</td>
-                                                    <td class="text-center">
-                                                        <a href="<c:url value="/content?id=${f.id}"/>"
-                                                           data-toggle="tooltip"
-                                                           class="btn btn-icon-toggle ink-reaction btn-primary"
-                                                           title="Открыть содержимое"><i class="fa fa-file-excel-o"></i></a>
-                                                        <button type="button" onclick="" data-toggle="tooltip"
-                                                                class="btn btn-icon-toggle ink-reaction btn-danger"
-                                                                title="Удалить файл">
-                                                            <span class="fa fa-trash"></span>
-                                                        </button>
-                                                    </td>
+                                                    <td class="text-center">${f.addedRecordsCount}</td>
+                                                    <td class="text-center">${f.ignoredRecordsCount}</td>
                                                 </tr>
                                             </c:forEach>
                                         </c:when>
                                         <c:otherwise>
                                             <tr>
-                                                <td class="text-center" colspan="5"><h4>Ничего нет..</h4></td>
+                                                <td class="text-center" colspan="7"><h4>Ничего нет..</h4></td>
                                             </tr>
                                         </c:otherwise>
                                     </c:choose>

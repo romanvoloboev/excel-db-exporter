@@ -1,33 +1,25 @@
 package com.exporter.service.impl;
 
-import com.exporter.dto.DefaultExcelRowDTO;
 import com.exporter.dto.ExcelFileDTO;
-import com.exporter.model.Content;
+import com.exporter.model.RowItem;
 import com.exporter.model.File;
-import com.exporter.repository.ContentRepository;
-import com.exporter.repository.FileInfoRepository;
+import com.exporter.repository.RowItemRepository;
+import com.exporter.repository.FileRepository;
 import com.exporter.service.FileService;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
-
-/**
- * @author Roman Voloboev
- */
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -37,11 +29,12 @@ public class FileServiceImpl implements FileService {
     private CustomerServiceImpl customerService;
 
     @Autowired
-    private FileInfoRepository fileInfoRepository;
+    private FileRepository fileRepository;
 
     @Autowired
-    private ContentRepository contentRepository;
+    private RowItemRepository rowItemRepository;
 
+    @Transactional
     @Override
     public Map<String, String> readFile(MultipartFile uploadedFile) throws IOException {
         String fileName = uploadedFile.getOriginalFilename();
@@ -56,29 +49,23 @@ public class FileServiceImpl implements FileService {
         size = round(size, 2);
         file = new File(fileName, size, new Date(), customerService.selectAuth());
 
+        parseFile(uploadedFile);
 
         Map<String, String> map = new HashMap<>();
         map.put("status", "ok");
         return map;
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public ExcelFileDTO getFileDTO(Integer id) {
-        File file = fileInfoRepository.getOne(id);
-        return new ExcelFileDTO(file.getId(), file.getFileName(), file.getFileSize(),
-                formatDateToString(file.getUploadDate()), file.getCustomer().getLogin());
-    }
-
     @Transactional
     @Override
     public List<ExcelFileDTO> getFilesList() {
-        List<File> files = fileInfoRepository.findAll();
+        List<File> files = fileRepository.findAll();
         List<ExcelFileDTO> excelFileDTOs = new ArrayList<>();
         if (!files.isEmpty()) {
             for (File file: files) {
                 excelFileDTOs.add(new ExcelFileDTO(file.getId(), file.getFileName(), file.getFileSize(),
-                        formatDateToString(file.getUploadDate()), file.getCustomer().getLogin()));
+                        formatDateToString(file.getUploadDate()), file.getAddedRecordsCount(),
+                        file.getIgnoredRecordsCount(), file.getCustomer().getLogin()));
             }
             return excelFileDTOs;
         }
@@ -87,69 +74,87 @@ public class FileServiceImpl implements FileService {
 
     @Transactional
     @Override
-    public void parseFile(MultipartFile file) throws IOException {
-        byte[] content = file.getBytes();
+    public void parseFile(MultipartFile uploadedFile) throws IOException {
+        byte[] content = uploadedFile.getBytes();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(content);
-        List<Content> contents = new ArrayList<>();
-        switch (file.getContentType()) {
+        List<RowItem> rowsFromFile = new ArrayList<>();
+        switch (uploadedFile.getContentType()) {
             //for .xls format
             case "application/vnd.ms-excel":
                 HSSFWorkbook hssfWorkbook = new HSSFWorkbook(inputStream);
                 HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(0);
-                contents = readFormat(hssfSheet);
+                rowsFromFile = readFormat(hssfSheet);
                 break;
             //for .xlsx format
             case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
                 XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
                 XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
-                contents = readFormat(xssfSheet);
+                rowsFromFile = readFormat(xssfSheet);
                 break;
         }
-
-        List<Content> contentAll = contentRepository.findAll();
-
-        if (contentAll != null && !contentAll.isEmpty()) {
-            Iterator<Content> contenrsFromDb = contentAll.listIterator();
-            Iterator<Content> contentsFromFile = contents.listIterator();
-            while (contenrsFromDb.hasNext() && contentsFromFile.hasNext()) {
-
+        List<RowItem> rowsFromDB = rowItemRepository.findAll();
+        int ignored = 0;
+        int added;
+        if (rowsFromDB != null && !rowsFromDB.isEmpty()) {
+            for (RowItem rowFromDB : rowsFromDB) {
+                for (Iterator<RowItem> fileIterator = rowsFromFile.iterator(); fileIterator.hasNext(); ) {
+                    RowItem rowFromFile = fileIterator.next();
+                    //если есть совпадение названия КА в бд и файле
+                    if (rowFromDB.getKA().toUpperCase().equals(rowFromFile.getKA().toUpperCase())) {
+                        //и если содержимое этих совпавших строк идентично
+                        if (rowFromDB.equals(rowFromFile)) {
+                            ignored++;
+                            //то удаляем строку из коллекции, в которой загружены строки из файла
+                            fileIterator.remove();
+                        } else {
+                            // если содержимое не идентично
+                            // то удаляем из БД старую запись
+                            rowItemRepository.delete(rowFromDB);
+                        }
+                    }
+                }
             }
+            rowItemRepository.save(rowsFromFile);
         } else {
-            contentRepository.save(contents);
+            rowItemRepository.save(rowsFromFile);
         }
-
-
-
-
+        added = rowsFromFile.size();
+        file.setAddedRecordsCount(added);
+        file.setIgnoredRecordsCount(ignored);
+        fileRepository.save(file);
    }
 
+    @Transactional(readOnly = true)
+    public List<RowItem> getRowItems(){
+        return rowItemRepository.findAll();
+    }
 
-    private List<Content> readFormat(Sheet sheet) throws IOException {
-        List<Content> contents = new ArrayList<>();
+
+    private List<RowItem> readFormat(Sheet sheet) throws IOException {
+        List<RowItem> rowItems = new ArrayList<>();
         Iterator<Row> rowIterator = sheet.rowIterator();
+        //пропускаем заголовки
+        rowIterator.next();
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
-            contents.add(new Content(
-                    row.getCell(0).getStringCellValue(),
+            RowItem rowITem = new RowItem(
+                    String.valueOf(row.getCell(0).getNumericCellValue()),
                     row.getCell(1).getStringCellValue(),
                     row.getCell(2).getStringCellValue(),
                     row.getCell(3).getStringCellValue(),
                     row.getCell(4).getStringCellValue(),
                     row.getCell(5).getStringCellValue(),
-                    row.getCell(6).getStringCellValue(),
-                    row.getCell(7).getStringCellValue(),
+                    String.valueOf(row.getCell(6).getNumericCellValue()),
+                    String.valueOf(row.getCell(7).getNumericCellValue()),
                     row.getCell(8).getStringCellValue(),
                     row.getCell(9).getStringCellValue(),
                     row.getCell(10).getStringCellValue(),
                     row.getCell(11).getStringCellValue(),
-                    row.getCell(12).getStringCellValue()));
+                    row.getCell(12).getStringCellValue());
+            System.out.println(rowITem.toString());
+            rowItems.add(rowITem);
         }
-        return contents;
-    }
-
-
-    private void saveFileToDb(File file) {
-        fileInfoRepository.save(file);
+        return rowItems;
     }
 
     private double round(double value, int places) {
