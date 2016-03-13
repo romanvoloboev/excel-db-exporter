@@ -1,6 +1,7 @@
-package com.exporter.service;
+package com.exporter.service.impl;
 
 import com.exporter.model.Customer;
+import com.exporter.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

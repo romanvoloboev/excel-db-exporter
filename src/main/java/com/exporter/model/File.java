@@ -3,41 +3,29 @@ package com.exporter.model;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * @author Roman Voloboev
- */
-
 @Entity
 @Table(name = "file")
-public class ExcelFile {
+public class File {
     private Integer id;
     private String fileName;
     private Double fileSize;
     private Date uploadDate;
+    private Integer totalRecords;
+    private Integer modifiedRecords;
     private Customer customer;
-    private byte[] content;
 
-    public ExcelFile() {
+    public File() {
     }
 
-    public ExcelFile(Integer id, String fileName, Double fileSize, Date uploadDate, Customer customer, byte[] content) {
+    public File(Integer id, String fileName, Double fileSize, Date uploadDate, Customer customer) {
         this.id = id;
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.uploadDate = uploadDate;
         this.customer = customer;
-        this.content = content;
     }
 
-    public ExcelFile(String fileName, Double fileSize, Date uploadDate, Customer customer, byte[] content) {
-        this.fileName = fileName;
-        this.fileSize = fileSize;
-        this.uploadDate = uploadDate;
-        this.customer = customer;
-        this.content = content;
-    }
-
-    public ExcelFile(String fileName, Double fileSize, Date uploadDate, Customer customer) {
+    public File(String fileName, Double fileSize, Date uploadDate, Customer customer) {
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.uploadDate = uploadDate;
@@ -79,6 +67,22 @@ public class ExcelFile {
         this.uploadDate = uploadDate;
     }
 
+    @Column(name = "total_records")
+    public Integer getTotalRecords() {
+        return totalRecords;
+    }
+    public void setTotalRecords(Integer totalRecords) {
+        this.totalRecords = totalRecords;
+    }
+
+    @Column(name = "modified_records")
+    public Integer getModifiedRecords() {
+        return modifiedRecords;
+    }
+    public void setModifiedRecords(Integer modifiedRecords) {
+        this.modifiedRecords = modifiedRecords;
+    }
+
     @ManyToOne
     @JoinColumn(name = "customer")
     public Customer getCustomer() {
@@ -86,13 +90,5 @@ public class ExcelFile {
     }
     public void setCustomer(Customer customer) {
         this.customer = customer;
-    }
-
-    @Column(name = "content", nullable = false)
-    public byte[] getContent() {
-        return content;
-    }
-    public void setContent(byte[] content) {
-        this.content = content;
     }
 }

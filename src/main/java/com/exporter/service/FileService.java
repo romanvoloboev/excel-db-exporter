@@ -1,20 +1,21 @@
 package com.exporter.service;
 
+import com.exporter.dto.DefaultExcelRowDTO;
 import com.exporter.dto.ExcelFileDTO;
+import com.exporter.model.File;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
-/**
- * @author Roman Voloboev
- */
-
-public interface ExcelFileService {
-    Map<String, String> uploadFile(MultipartFile file) throws IOException;
+public interface FileService {
+    Map<String, String> readFile(MultipartFile file) throws IOException;
     ExcelFileDTO getFileDTO(Integer id);
+    List<ExcelFileDTO> getFilesList();
+    void parseFile(MultipartFile file) throws IOException;
 
     default String formatDateToString(Date date) {
         if (date == null) return "";

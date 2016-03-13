@@ -1,13 +1,10 @@
 package com.exporter.controller;
 
-import com.exporter.dto.DefaultExcelRowDTO;
 import com.exporter.dto.ExcelFileDTO;
-import com.exporter.model.ExcelFile;
-import com.exporter.service.CustomerServiceImpl;
-import com.exporter.service.DefaultExcelFileReader;
-import com.exporter.service.ExcelFileServiceImpl;
+import com.exporter.service.impl.CustomerServiceImpl;
+import com.exporter.service.impl.DefaultExcelFileReader;
+import com.exporter.service.impl.FileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +28,7 @@ public class MainController {
     private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
 
     @Autowired
-    private ExcelFileServiceImpl fileService;
+    private FileServiceImpl fileService;
 
     @Autowired
     private CustomerServiceImpl customerService;
@@ -67,7 +63,7 @@ public class MainController {
         String contentType = file.getContentType();
         if (!file.isEmpty() && (contentType.contains("vnd.ms-excel") || contentType.contains("vnd.openxmlformats-officedocument.spreadsheetml.sheet"))) {
             try {
-                answer = fileService.uploadFile(file);
+                answer = fileService.readFile(file);
             } catch (IOException e) {
                 answer.put("status", "Some error occurred while getting bytes..");
             }
@@ -81,7 +77,7 @@ public class MainController {
     @ResponseBody
     @RequestMapping(value = "/get_user_files_list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<ExcelFileDTO> get_user_files() {
-        return customerService.getCurrentCustomerFilesList();
+        return customerService.getFilesList();
     }
 
     @PreAuthorize("isAuthenticated()")
