@@ -9,7 +9,7 @@ public class File {
     private Integer id;
     private String fileName;
     private Double fileSize;
-    private Date uploadDate;
+    private Date date;
     private Integer addedRecordsCount;
     private Integer ignoredRecordsCount;
     private Customer customer;
@@ -17,18 +17,18 @@ public class File {
     public File() {
     }
 
-    public File(Integer id, String fileName, Double fileSize, Date uploadDate, Customer customer) {
+    public File(Integer id, String fileName, Double fileSize, Date date, Customer customer) {
         this.id = id;
         this.fileName = fileName;
         this.fileSize = fileSize;
-        this.uploadDate = uploadDate;
+        this.date = date;
         this.customer = customer;
     }
 
-    public File(String fileName, Double fileSize, Date uploadDate, Customer customer) {
+    public File(String fileName, Double fileSize, Date date, Customer customer) {
         this.fileName = fileName;
         this.fileSize = fileSize;
-        this.uploadDate = uploadDate;
+        this.date = date;
         this.customer = customer;
     }
 
@@ -60,11 +60,11 @@ public class File {
     }
 
     @Column(name = "date", nullable = false)
-    public Date getUploadDate() {
-        return uploadDate;
+    public Date getDate() {
+        return date;
     }
-    public void setUploadDate(Date uploadDate) {
-        this.uploadDate = uploadDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     @Column(name = "added_records")

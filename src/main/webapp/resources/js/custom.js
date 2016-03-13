@@ -41,6 +41,7 @@ $(function () {
                         delay: 1000,
                         onClose: function () {
                             myDropzone.removeAllFiles();
+                            location.href = "/";
                         }
                     });
             }

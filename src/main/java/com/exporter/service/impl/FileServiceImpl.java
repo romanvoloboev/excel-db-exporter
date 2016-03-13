@@ -59,12 +59,12 @@ public class FileServiceImpl implements FileService {
     @Transactional
     @Override
     public List<ExcelFileDTO> getFilesList() {
-        List<File> files = fileRepository.findAll();
+        List<File> files = fileRepository.findAllByOrderByDateDesc();
         List<ExcelFileDTO> excelFileDTOs = new ArrayList<>();
         if (!files.isEmpty()) {
             for (File file: files) {
                 excelFileDTOs.add(new ExcelFileDTO(file.getId(), file.getFileName(), file.getFileSize(),
-                        formatDateToString(file.getUploadDate()), file.getAddedRecordsCount(),
+                        formatDateToString(file.getDate()), file.getAddedRecordsCount(),
                         file.getIgnoredRecordsCount(), file.getCustomer().getLogin()));
             }
             return excelFileDTOs;

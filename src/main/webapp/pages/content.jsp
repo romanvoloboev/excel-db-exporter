@@ -12,48 +12,61 @@
 </head>
 
 <body class="menubar-hoverable header-fixed menubar-pin ">
-<%@include file="includes/header.jsp" %>
+<header id="header">
+    <div class="headerbar">
+        <ul class="header-nav header-nav-options pull-right">
+            <li>
+                <button type="submit" onclick="location.href='/'" class="btn btn-icon-toggle ink-reaction"><i
+                        class="fa fa-fw fa-home text-primary"></i></button>
+            </li>
+            <li>
+                <button type="submit" onclick="location.href='/logout'" class="btn btn-icon-toggle ink-reaction"><i
+                        class="fa fa-fw fa-power-off text-danger"></i></button>
+            </li>
+        </ul>
+    </div>
+</header>
 <div id="base">
     <div class="offcanvas"></div>
     <div id="content">
         <section>
             <div class="row">
-                <div id="table" class="col-lg-12">
+                <div id="table" class="col-lg-12" style="padding-top: 15px; font-size: 12px;">
                     <div class="card">
                         <div class="card-body no-padding">
                             <div class="table-responsive no-margin">
                                 <table class="table table-striped no-margin">
                                     <thead>
                                     <tr>
-                                        <th class="text-left">Год</th>
-                                        <th class="text-left">КА</th>
-                                        <th class="text-left">РН</th>
-                                        <th class="text-left">Оператор КА</th>
-                                        <th class="text-left">Платформа КА</th>
-                                        <th class="text-left">Назначение КА</th>
-                                        <th class="text-left">Срок</th>
-                                        <th class="text-left">Масса</th>
-                                        <th class="text-left">Изготовитель</th>
-                                        <th class="text-left">Орбита</th>
-                                        <th class="text-left">Провайдер</th>
-                                        <th class="text-left">Космодром</th>
+                                        <th class="">Год</th>
+                                        <th class="">КА</th>
+                                        <th class="">РН</th>
+                                        <th class="">Оператор КА</th>
+                                        <th class="">Платформа КА</th>
+                                        <th class="">Назначение КА</th>
+                                        <th class="">Срок</th>
+                                        <th class="">Масса</th>
+                                        <th class="">Изготовитель</th>
+                                        <th class="">Орбита</th>
+                                        <th class="">Провайдер</th>
+                                        <th class="">Космодром</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <c:forEach items="${rowsList}" var="row">
                                         <tr>
-                                            <td class="text-left">${row.god}</td>
-                                            <td class="text-left">${row.KA}</td>
-                                            <td class="text-left">${row.RN}</td>
-                                            <td class="text-left">${row.operatorKA}</td>
-                                            <td class="text-left">${row.platformaKA}</td>
-                                            <td class="text-left">${row.naznachenieKA}</td>
-                                            <td class="text-left">${row.srok}</td>
-                                            <td class="text-left">${row.massa}</td>
-                                            <td class="text-left">${row.izgotovitel}</td>
-                                            <td class="text-left">${row.orbita}</td>
-                                            <td class="text-left">${row.provaider}</td>
-                                            <td class="text-left">${row.kosmodrom}</td>
+                                            <td class="">${row.god}</td>
+                                            <td class="">${row.KA}</td>
+                                            <td class="">${row.RN}</td>
+                                            <td class="">${row.operatorKA}</td>
+                                            <td class="">${row.platformaKA}</td>
+                                            <td class="">${row.naznachenieKA}</td>
+                                            <td class="">${row.srok}</td>
+                                            <td class="">${row.massa}</td>
+                                            <td class="">${row.izgotovitel}</td>
+                                            <td class="">${row.orbita}</td>
+                                            <td class="">${row.provaider}</td>
+                                            <td class="">${row.kosmodrom}</td>
                                         </tr>
                                     </c:forEach>
                                     </tbody>
